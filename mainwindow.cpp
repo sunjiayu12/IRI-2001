@@ -89,7 +89,8 @@ void MainWindow::on_pushButton_submit_clicked()
         return;
     }
     PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.append('/home/sjy/Workspace/ionosphere/')");
+    // your path to .py file
+    PyRun_SimpleString("sys.path.append('../ionosphere/')");
 
     PyObject* pModule = PyImport_ImportModule("crawler");
     PyObject* pFunc = PyObject_GetAttrString(pModule, "Hello");
@@ -100,4 +101,10 @@ void MainWindow::on_pushButton_submit_clicked()
     }
     PyObject_CallFunction(pFunc, NULL);
     Py_Finalize();
+}
+
+void MainWindow::on_pushButton_reset_clicked()
+{
+    InitializeParameters();
+    InitializeLineEdits();
 }

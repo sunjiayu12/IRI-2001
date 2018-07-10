@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
-#include <QFile>
-#include <QFileInfo>
 #include <Python.h>
 
 #include <iostream>
@@ -14,16 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QFileInfo fileInfo("/crawler.py");
-    if(fileInfo.exists())
-    {
-        ui->textEdit_log->append("[ERROR] No python file detected.");
-    }
-    else
-    {
-        ui->textEdit_log->append("[INFO] Found IRI_2001.py.");
-        ui->textEdit_log->append("[INFO] Initialization OK.");
-    }
     ui->lineEdit_lat1->setText("0");
     ui->lineEdit_lon1->setText("0");
     ui->lineEdit_lat2->setText("30");
@@ -56,6 +44,11 @@ void MainWindow::on_pushButton_submit_clicked()
     PyRun_SimpleString("sys.path.append('./')");
 
     PyObject* pModule = PyImport_ImportModule("IRI_2001");
+    if(!pModule)
+    {
+        ui->textEdit_log->append("[ERROR] Not found IRI_2001.py. Ensure that .py and executable file are in the same directory");
+        return;
+    }
     PyObject* pFunc = PyObject_GetAttrString(pModule, "IRI");
     if(!pFunc)
     {
